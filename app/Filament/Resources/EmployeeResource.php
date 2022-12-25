@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\State;
+use App\Models\Country;
 use App\Models\Employee;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EmployeeResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
+use App\Models\City;
 
 class EmployeeResource extends Resource
 {
@@ -31,14 +34,24 @@ class EmployeeResource extends Resource
             ->schema([
                 Card::make()->schema([
                     Select::make('country_id')
+                        ->label('Country')
                         ->required()
-                        ->relationship('country', 'name'),
+                        ->options(Country::all()->pluck('name', 'id')->toArray())
+                        ->reactive()
+                        ->afterStateUpdated(fn (callable $set) => $set('state_id', null)),
                     Select::make('state_id')
-                        ->required()
-                        ->relationship('state', 'name'),
+                        ->label('State')
+                        ->options(function (callable $get){
+                            return State::where('country_id', $get('country_id'))->pluck('name','id')->toArray();
+
+                        })
+                        ->reactive()
+                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
                     Select::make('city_id')
-                        ->required()
-                        ->relationship('city', 'name'),
+                        ->label('City')
+                        ->options(function (callable $get){
+                            return City::where('state_id', $get('state_id'))->pluck('name','id')->toArray();
+                        }),
                     Select::make('department_id')
                         ->required()
                         ->relationship('department', 'name'),
