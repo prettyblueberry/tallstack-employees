@@ -13,11 +13,13 @@ use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Wizard;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Wizard\Step;
 use App\Filament\Resources\EmployeeResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
@@ -37,50 +39,58 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Card::make()->schema([
-                    Select::make('country_id')
-                        ->label('Country')
-                        ->required()
-                        ->options(Country::all()->pluck('name', 'id')->toArray())
-                        ->reactive()
-                        ->afterStateUpdated(fn (callable $set) => $set('state_id', null)),
-                    Select::make('state_id')
-                        ->label('State')
-                        ->required()
-                        ->options(function (callable $get){
-                            return State::where('country_id', $get('country_id'))->pluck('name','id')->toArray();
+                Wizard::make([
+                    Step::make('Personalization')
+                    ->schema([
+                        TextInput::make('first_name')
+                            ->required()
+                            ->string()
+                            ->maxLength(255),
+                        TextInput::make('last_name')
+                            ->required()
+                            ->string()
+                            ->maxLength(255),
+                        Select::make('department_id')
+                            ->required()
+                            ->relationship('department', 'name'),
+                        DatePicker::make('birth_date'),
+                        DatePicker::make('date_hired')
+                    ]),
+                    Step::make('Location')->schema([
+                        Select::make('country_id')
+                            ->label('Country')
+                            ->required()
+                            ->options(Country::all()->pluck('name', 'id')->toArray())
+                            ->reactive()
+                            ->afterStateUpdated(fn (callable $set) => $set('state_id', null)),
+                        Select::make('state_id')
+                            ->label('State')
+                            ->required()
+                            ->options(function (callable $get){
+                                return State::where('country_id', $get('country_id'))->pluck('name','id')->toArray();
 
-                        })
-                        ->reactive()
-                        ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
-                    Select::make('city_id')
-                        ->label('City')
-                        ->required()
-                        ->options(function (callable $get){
-                            return City::where('state_id', $get('state_id'))->pluck('name','id')->toArray();
-                        }),
-                    Select::make('department_id')
-                        ->required()
-                        ->relationship('department', 'name'),
-                    TextInput::make('first_name')
-                        ->required()
-                        ->string()
-                        ->maxLength(255),
-                    TextInput::make('last_name')
-                        ->required()
-                        ->string()
-                        ->maxLength(255),
-                    TextInput::make('address')
-                        ->required()
-                        ->string()
-                        ->maxLength(255),
-                    TextInput::make('zip_code')
-                        ->required()
-                        ->string()
-                        ->maxLength(6),
-                    DatePicker::make('birth_date'),
-                    DatePicker::make('date_hired')
-                ]),
+                            })
+                            ->reactive()
+                            ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
+                        Select::make('city_id')
+                            ->label('City')
+                            ->required()
+                            ->options(function (callable $get){
+                                return City::where('state_id', $get('state_id'))->pluck('name','id')->toArray();
+                            }),
+                        TextInput::make('address')
+                            ->required()
+                            ->string()
+                            ->maxLength(255),
+                        TextInput::make('zip_code')
+                            ->required()
+                            ->string()
+                            ->maxLength(6),
+                    ]),
+                ])
+                ->columns(2)
+                ->columnSpan('full')
+                ,
             ]);
     }
 

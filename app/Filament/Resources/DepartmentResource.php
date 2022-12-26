@@ -47,6 +47,8 @@ class DepartmentResource extends Resource
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('created_at')
+                    ->dateTime(),
             ])
             ->filters([
                 //

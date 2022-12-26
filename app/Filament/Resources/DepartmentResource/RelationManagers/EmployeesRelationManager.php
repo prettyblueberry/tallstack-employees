@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\DepartmentResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -30,7 +31,17 @@ class EmployeesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name'),
+                TextColumn::make('first_name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('last_name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('department.name')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->dateTime(),
             ])
             ->filters([
                 //
@@ -45,5 +56,5 @@ class EmployeesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    }
 }
