@@ -41,6 +41,7 @@ class EmployeeResource extends Resource
                         ->afterStateUpdated(fn (callable $set) => $set('state_id', null)),
                     Select::make('state_id')
                         ->label('State')
+                        ->required()
                         ->options(function (callable $get){
                             return State::where('country_id', $get('country_id'))->pluck('name','id')->toArray();
 
@@ -49,6 +50,7 @@ class EmployeeResource extends Resource
                         ->afterStateUpdated(fn (callable $set) => $set('city_id', null)),
                     Select::make('city_id')
                         ->label('City')
+                        ->required()
                         ->options(function (callable $get){
                             return City::where('state_id', $get('state_id'))->pluck('name','id')->toArray();
                         }),
