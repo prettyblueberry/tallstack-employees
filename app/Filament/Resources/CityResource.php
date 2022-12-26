@@ -23,6 +23,10 @@ class CityResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    protected static ?int $navigationSort = 4;
+
+    protected static ?string $navigationGroup = 'System Management';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -32,7 +36,9 @@ class CityResource extends Resource
                         ->required()
                         ->relationship('state', 'name'),
                     TextInput::make('name')
-                        ->required(),
+                        ->required()
+                        ->string()
+                        ->maxLength(255),
                 ]),
             ]);
     }

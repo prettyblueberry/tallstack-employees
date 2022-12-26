@@ -26,7 +26,11 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationGroup = 'User Management';
 
     public static function form(Form $form): Form
     {
@@ -58,13 +62,21 @@ class EmployeeResource extends Resource
                         ->required()
                         ->relationship('department', 'name'),
                     TextInput::make('first_name')
-                        ->required(),
+                        ->required()
+                        ->string()
+                        ->maxLength(255),
                     TextInput::make('last_name')
-                        ->required(),
+                        ->required()
+                        ->string()
+                        ->maxLength(255),
                     TextInput::make('address')
-                        ->required(),
+                        ->required()
+                        ->string()
+                        ->maxLength(255),
                     TextInput::make('zip_code')
-                        ->required(),
+                        ->required()
+                        ->string()
+                        ->maxLength(6),
                     DatePicker::make('birth_date'),
                     DatePicker::make('date_hired')
                 ]),

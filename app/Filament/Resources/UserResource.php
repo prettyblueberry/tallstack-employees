@@ -22,7 +22,11 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
+
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationGroup = 'User Management';
 
     public static function form(Form $form): Form
     {
@@ -30,9 +34,13 @@ class UserResource extends Resource
             ->schema([
                 Card::make()->schema([
                     TextInput::make('name')
+                        ->string()
+                        ->maxLength(255)
                         ->required()
                         ->maxLength(255),
                     TextInput::make('email')
+                        ->string()
+                        ->maxLength(255)
                         ->required()
                         ->label('Email Address')
                         ->email(),
