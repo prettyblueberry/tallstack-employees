@@ -38,3 +38,8 @@ php artisan serve
 npm run dev / yarn dev
 ```
 
+# Login Credentials
+- Admin URL - http://localhost:8000/admin
+- Email - developer@mail.com
+- Password - password
+
