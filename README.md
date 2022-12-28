@@ -1,4 +1,5 @@
 # Employee Management System
+This system manages employees using TALL-Stack technology.
 
 ### Project Key Features
 - Laravel v9.x
