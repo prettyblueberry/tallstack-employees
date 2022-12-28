@@ -8,7 +8,7 @@
 ## Setup
 ```bash
 # Clone the repo
-git clone https://github.com/devboyarif/employee-management-system.git
+git clone https://github.com/prettyblueberry/fallstack-employees.git
 
 # Install composer dependency
 composer install
